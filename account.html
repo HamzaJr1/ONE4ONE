@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account - ONE4ONE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #181818;
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .account-container {
+      background: #232323;
+      padding: 40px 32px 32px 32px;
+      border-radius: 10px;
+      box-shadow: 0 0 24px #0008;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 340px;
+      position: relative;
+    }
+
+    .account-container h2 {
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: 2.2em;
+      letter-spacing: 3px;
+    }
+
+    .account-container form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 18px;
+    }
+
+    .account-container input[type="text"],
+    .account-container input[type="password"],
+    .account-container input[type="email"] {
+      padding: 12px;
+      border-radius: 4px;
+      border: none;
+      font-size: 1.1em;
+      background: #181818;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    input[name="street"],
+    input[name="building"],
+    input[name="apartment"] {
+      font-size: 0.9em;
+      padding: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .account-container input:focus {
+      outline: 2px solid #0077cc;
+    }
+
+    .account-container button {
+      background: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .account-container button:hover {
+      background: #005fa3;
+    }
+
+    .account-container .success {
+      color: #4dff7a;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 1em;
+    }
+
+    .account-container .error {
+      color: #ff4d4d;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 1em;
+    }
+
+    .logout-btn {
+      background: #cc0000;
+      margin-top: 18px;
+    }
+
+    #go-back {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      font-size: 2em;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      z-index: 2;
+    }
+
+    .phone-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .phone-container span {
+      background: #181818;
+      padding: 12px 8px;
+      border-radius: 4px 0 0 4px;
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+    }
+
+    .phone-container input {
+      flex: 1;
+      border-radius: 0 4px 4px 0;
+      text-align: center;
+      height: 44px;
+    }
+
+    .address-container {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .address-container input {
+      flex: 1;
+    }
+
+    .name-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .name-row div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 4px;
+      font-size: 0.9em;
+      color: #ccc;
+    }
+
+    select {
+      padding: 12px;
+      border-radius: 4px;
+      background: #181818;
+      color: #fff;
+      font-size: 1.1em;
+      margin-bottom: 6px;
+      border: none;
+    }
+
+    input[type="file"] {
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    #profile-pic-preview {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .row-container {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .col-half {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #profilePicPreviewContainer {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    #profilePicPreview {
+      max-width: 90px;
+      max-height: 90px;
+      border-radius: 50%;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .name-row input {
+        font-size: 0.9em;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="account-container">
+    <span id="go-back">&times;</span>
+    <h2>My Account</h2>
+    <form id="account-form" autocomplete="off">
+      <div class="success" id="account-success" style="display:none;"></div>
+      <div class="error" id="account-error" style="display:none;"></div>
+      <div class="row-container">
+        <div class="col-half">
+          <label>First Name</label>
+          <input type="text" id="firstName" name="firstName" placeholder="First Name" required />
+        </div>
+        <div class="col-half">
+          <label>Last Name</label>
+          <input type="text" id="lastName" name="lastName" placeholder="Last Name" required />
+        </div>
+      </div>
+      <label>Username</label>
+      <input type="text" id="username" name="username" required disabled />
+      <label>Email</label>
+      <input type="email" id="email" name="email" required />
+      <label>Phone Number</label>
+      <div class="phone-container">
+        <span>+20</span>
+        <input type="text" id="phone" name="phone" placeholder="1XXXXXXXXX" maxlength="11" pattern="[0-9]{11}"
+          required />
+      </div>
+      <label>City</label>
+      <select id="city" name="city" required>
+        <option value="">Select City</option>
+        <option value="Cairo">Cairo</option>
+        <option value="Giza">Giza</option>
+        <option value="Alex">Alex</option>
+        <option value="Portsaid">Portsaid</option>
+        <option value="Hurghada">Hurghada</option>
+      </select>
+      <label>Gender (optional)</label>
+      <select id="gender" name="gender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      <label>Birthdate (optional)</label>
+      <input type="date" id="birthdate" name="birthdate" />
+      <label>Profile Picture</label>
+      <input type="file" id="profilePic" accept="image/*" />
+      <div id="profilePicPreviewContainer" style="display:flex;justify-content:center;margin-bottom:8px;">
+        <img id="profilePicPreview" src="" alt="Profile Picture Preview"
+          style="max-width:90px;max-height:90px;border-radius:50%;display:none;" />
+      </div>
+      <label>Address</label>
+      <input type="text" id="address" name="address" placeholder="Address" required />
+      <div class="address-container">
+        <input type="text" id="street" name="street" placeholder="Street" required />
+        <input type="text" id="building" name="building" placeholder="Building" required />
+        <input type="text" id="apartment" name="apartment" placeholder="Apartment" required />
+      </div>
+      <label>Change Password</label>
+      <div style="position:relative;display:flex;align-items:center;">
+        <input type="password" id="password" name="password" placeholder="New Password (leave blank to keep)"
+          style="flex:1;" />
+        <button type="button" id="toggle-password"
+          style="position:absolute;right:8px;background:none;border:none;color:#ccc;font-size:1.1em;cursor:pointer;">👁️</button>
+      </div>
+      <button type="submit">Save Changes</button>
+    </form>
+    <button id="logout-btn" class="logout-btn">Log Out</button>
+  </div>
+  <script>
+    // Get users and user info from localStorage
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '{}');
+    }
+    function setUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+    function getUserInfo() {
+      return JSON.parse(localStorage.getItem('userInfo') || '{}');
+    }
+    function setUserInfo(info) {
+      localStorage.setItem('userInfo', JSON.stringify(info));
+    }
+    // Load current user
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) {
+      window.location.href = 'Sign_in.html';
+    }
+    // Prefill form
+    const users = getUsers();
+    const userInfo = getUserInfo();
+    document.getElementById('username').value = currentUser;
+    document.getElementById('firstName').value = userInfo[currentUser]?.firstName || '';
+    document.getElementById('lastName').value = userInfo[currentUser]?.lastName || '';
+    document.getElementById('email').value = userInfo[currentUser]?.email || '';
+    let phoneVal = userInfo[currentUser]?.phone || '';
+    if (phoneVal.startsWith('+20')) phoneVal = phoneVal.slice(3);
+    document.getElementById('phone').value = phoneVal;
+    document.getElementById('city').value = userInfo[currentUser]?.city || '';
+    document.getElementById('gender').value = userInfo[currentUser]?.gender || '';
+    document.getElementById('birthdate').value = userInfo[currentUser]?.birthdate || '';
+    document.getElementById('address').value = userInfo[currentUser]?.address || '';
+    document.getElementById('street').value = userInfo[currentUser]?.street || '';
+    document.getElementById('building').value = userInfo[currentUser]?.building || '';
+    document.getElementById('apartment').value = userInfo[currentUser]?.apartment || '';
+    // Profile picture preview
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const profilePicInput = document.getElementById('profilePic');
+    if (userInfo[currentUser]?.profilePic) {
+      profilePicPreview.src = userInfo[currentUser].profilePic;
+      profilePicPreview.style.display = 'block';
+    }
+    profilePicInput.addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          profilePicPreview.src = evt.target.result;
+          profilePicPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    // Save changes
+    document.getElementById('account-form').onsubmit = function (e) {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const city = document.getElementById('city').value;
+      const gender = document.getElementById('gender').value;
+      const birthdate = document.getElementById('birthdate').value;
+      const address = document.getElementById('address').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const building = document.getElementById('building').value.trim();
+      const apartment = document.getElementById('apartment').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const successDiv = document.getElementById('account-success');
+      const errorDiv = document.getElementById('account-error');
+      successDiv.style.display = 'none';
+      errorDiv.style.display = 'none';
+      if (firstName.length < 2) {
+        errorDiv.textContent = 'Please enter a valid first name.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (lastName.length < 2) {
+        errorDiv.textContent = 'Please enter a valid last name.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (!email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
+        errorDiv.textContent = 'Please enter a valid email address.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (!phone.match(/^01[0-9]{9}$/)) {
+        errorDiv.textContent = 'Phone number must start with 01 and be 11 digits (e.g. 01102342092, excluding +20).';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (!city) {
+        errorDiv.textContent = 'Please select a city.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (address.length < 4) {
+        errorDiv.textContent = 'Please enter a valid address.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (street.length < 2) {
+        errorDiv.textContent = 'Please enter a valid street.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (building.length < 1) {
+        errorDiv.textContent = 'Please enter a building number.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      if (apartment.length < 1) {
+        errorDiv.textContent = 'Please enter an apartment number.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      // Save info
+      userInfo[currentUser] = userInfo[currentUser] || {};
+      userInfo[currentUser].firstName = firstName;
+      userInfo[currentUser].lastName = lastName;
+      userInfo[currentUser].email = email;
+      userInfo[currentUser].phone = '+20' + phone;
+      userInfo[currentUser].city = city;
+      userInfo[currentUser].gender = gender;
+      userInfo[currentUser].birthdate = birthdate;
+      userInfo[currentUser].address = address;
+      userInfo[currentUser].street = street;
+      userInfo[currentUser].building = building;
+      userInfo[currentUser].apartment = apartment;
+      // Save profile picture if changed
+      if (profilePicInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          userInfo[currentUser].profilePic = evt.target.result;
+          setUserInfo(userInfo);
+        };
+        reader.readAsDataURL(profilePicInput.files[0]);
+      } else if (profilePicPreview.src && profilePicPreview.style.display === 'block') {
+        userInfo[currentUser].profilePic = profilePicPreview.src;
+        setUserInfo(userInfo);
+      } else {
+        setUserInfo(userInfo);
+      }
+      // Save password if changed
+      if (password.length > 0) {
+        if (password.length < 4) {
+          errorDiv.textContent = 'Password must be at least 4 characters.';
+          errorDiv.style.display = 'block';
+          return;
+        }
+        users[currentUser] = password;
+        setUsers(users);
+      }
+      document.getElementById('password').value = '';
+      successDiv.textContent = 'Account updated!';
+      successDiv.style.display = 'block';
+    };
+    // Go back button
+    document.getElementById('go-back').onclick = function () {
+      window.history.length > 1 ? window.history.back() : window.location.href = 'index.html';
+    };
+    // Logout
+    document.getElementById('logout-btn').onclick = function () {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'Sign_in.html';
+    };
+    // View password toggle
+    document.getElementById('toggle-password').onclick = function () {
+      const pwd = document.getElementById('password');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        this.textContent = '🙈';
+      } else {
+        pwd.type = 'password';
+        this.textContent = '👁️';
+      }
+    };
+  </script>
+</body>
+
+</html>

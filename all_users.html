@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Users - ONE4ONE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #181818;
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 40px;
+      margin-bottom: 24px;
+      font-size: 2.2em;
+      letter-spacing: 3px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 95vw;
+      max-width: 1200px;
+      background: #232323;
+      margin-bottom: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 24px #0008;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 1em;
+    }
+
+    th {
+      background: #0077cc;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background: #20232a;
+    }
+
+    tr:nth-child(odd) {
+      background: #232323;
+    }
+
+    img.profile-pic {
+      max-width: 60px;
+      max-height: 60px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .export-btn {
+      background: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 24px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-bottom: 24px;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .export-btn:hover {
+      background: #005fa3;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>All Users Information</h2>
+  <button class="export-btn" id="export-csv-btn">Export as CSV</button>
+  <div id="export-success" style="color:#4dff7a;display:none;margin-bottom:12px;">CSV exported!</div>
+  <div id="users-table-container"></div>
+  <script>
+    function getUserInfo() {
+      return JSON.parse(localStorage.getItem('userInfo') || '{}');
+    }
+    function renderTable() {
+      const userInfo = getUserInfo();
+      const users = Object.keys(userInfo);
+      if (users.length === 0) {
+        document.getElementById('users-table-container').innerHTML = '<p>No users found.</p>';
+        return;
+      }
+      let table = '<table><thead><tr>' +
+        '<th>Username</th>' +
+        '<th>First Name</th>' +
+        '<th>Last Name</th>' +
+        '<th>Email</th>' +
+        '<th>Phone</th>' +
+        '<th>City</th>' +
+        '<th>Gender</th>' +
+        '<th>Birthdate</th>' +
+        '<th>Address</th>' +
+        '<th>Street</th>' +
+        '<th>Building</th>' +
+        '<th>Apartment</th>' +
+        '<th>Profile Picture</th>' +
+        '</tr></thead><tbody>';
+      users.forEach(username => {
+        const u = userInfo[username] || {};
+        table += '<tr>' +
+          `<td>${username}</td>` +
+          `<td>${u.firstName || ''}</td>` +
+          `<td>${u.lastName || ''}</td>` +
+          `<td>${u.email || ''}</td>` +
+          `<td>${u.phone || ''}</td>` +
+          `<td>${u.city || ''}</td>` +
+          `<td>${u.gender || ''}</td>` +
+          `<td>${u.birthdate || ''}</td>` +
+          `<td>${u.address || ''}</td>` +
+          `<td>${u.street || ''}</td>` +
+          `<td>${u.building || ''}</td>` +
+          `<td>${u.apartment || ''}</td>` +
+          `<td>${u.profilePic ? `<img class='profile-pic' src='${u.profilePic}' alt='Profile Pic'/>` : ''}</td>` +
+          '</tr>';
+      });
+      table += '</tbody></table>';
+      document.getElementById('users-table-container').innerHTML = table;
+    }
+    function exportCSV() {
+      const userInfo = getUserInfo();
+      const users = Object.keys(userInfo);
+      if (users.length === 0) return;
+      const headers = ['Username', 'First Name', 'Last Name', 'Email', 'Phone', 'City', 'Gender', 'Birthdate', 'Address', 'Street', 'Building', 'Apartment'];
+      let csv = headers.join(',') + '\n';
+      users.forEach(username => {
+        const u = userInfo[username] || {};
+        const row = [
+          username,
+          u.firstName || '',
+          u.lastName || '',
+          u.email || '',
+          u.phone || '',
+          u.city || '',
+          u.gender || '',
+          u.birthdate || '',
+          u.address || '',
+          u.street || '',
+          u.building || '',
+          u.apartment || ''
+        ];
+        csv += row.map(val => '"' + String(val).replace(/"/g, '""') + '"').join(',') + '\n';
+      });
+      try {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'users.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        document.getElementById('export-success').style.display = 'block';
+        setTimeout(() => { document.getElementById('export-success').style.display = 'none'; }, 2000);
+      } catch (err) {
+        alert('Export failed: ' + err.message);
+      }
+    }
+    document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
+    renderTable();
+  </script>
+</body>
+
+</html>
